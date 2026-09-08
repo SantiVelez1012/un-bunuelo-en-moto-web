@@ -1,11 +1,11 @@
 ---
 interface Props {
-  currentPage?: 'home' | 'blog';
+  currentPage?: 'home' | 'blog' | 'none';
 }
 
 const { currentPage = 'home' } = Astro.props;
 const youtubeUrl = 'https://youtube.com/@unbunueloenmoto';
-const homeLink = currentPage === 'home' ? '#inicio' : '/';
+const homeLink = currentPage === 'home' ? '/' : '/';
 ---
 
 <header class="absolute inset-x-0 top-0 z-20 mx-auto flex max-w-[1320px] items-center justify-between px-5 py-5 md:px-10 lg:px-[72px]">
@@ -15,14 +15,17 @@ const homeLink = currentPage === 'home' ? '#inicio' : '/';
   </a>
   <nav class="hidden items-center gap-8 text-[13px] text-retro-crema/70 md:flex" aria-label="Navegación principal">
     {currentPage === 'home' ? <>
-      <a class="transition-colors hover:text-neon" href="#sobre-mi">Sobre mí</a>
-      <a class="transition-colors hover:text-neon" href="#contenido">Redes</a>
+      <a class="transition-colors hover:text-neon" href="/" data-scroll-target="sobre-mi">Sobre mí</a>
+      <a class="transition-colors hover:text-neon" href="/" data-scroll-target="contenido">Redes</a>
       <a class="transition-colors hover:text-neon" href="/blog">Blog</a>
-      <a class="transition-colors hover:text-neon" href="#comunidad">Comunidad</a>
-    </> : <>
+      <a class="transition-colors hover:text-neon" href="/" data-scroll-target="comunidad">Comunidad</a>
+    </> : currentPage === 'blog' ? <>
       <a class="transition-colors hover:text-neon" href="/">Inicio</a>
       <a class="text-neon" href="/blog" aria-current="page">Blog</a>
-      <a class="transition-colors hover:text-neon" href="/#sobre-mi">Sobre mí</a>
+      <a class="transition-colors hover:text-neon" href="/" data-scroll-target="sobre-mi">Sobre mí</a>
+    </> : <>
+      <a class="transition-colors hover:text-neon" href="/">Inicio</a>
+      <a class="transition-colors hover:text-neon" href="/blog">Blog</a>
     </>}
   </nav>
   <a class="inline-flex min-h-10 items-center justify-center rounded-full bg-bunuelo px-4 text-xs font-bold text-retro-dark transition hover:bg-bunuelo-dark hover:-translate-y-0.5" href={youtubeUrl} target="_blank" rel="noreferrer">Ver el canal</a>

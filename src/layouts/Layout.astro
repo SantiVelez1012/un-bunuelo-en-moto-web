@@ -12,7 +12,6 @@ const {
 const siteUrl = 'https://unbunueloenmoto.com';
 const canonicalUrl = new URL(canonicalPath, siteUrl).href;
 const socialImage = new URL(image, siteUrl).href;
-const adsenseClientId = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT_ID;
 ---
 
 <!doctype html>
@@ -21,6 +20,7 @@ const adsenseClientId = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT_ID;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content={description} />
+		<meta name="google-adsense-account" content="ca-pub-4030720618276023">
 		<meta name="theme-color" content="#11100e" />
 		<link rel="canonical" href={canonicalUrl} />
 		<meta property="og:type" content={type} />
@@ -38,7 +38,6 @@ const adsenseClientId = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT_ID;
 		{structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		{adsenseClientId && <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`} crossorigin="anonymous"></script>}
 		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 		<title>{title}</title>
 	</head>

@@ -3,6 +3,17 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+document.addEventListener('click', (event) => {
+  const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('[data-scroll-target]');
+  if (!link) return;
+
+  const target = document.getElementById(link.dataset.scrollTarget ?? '');
+  if (!target) return;
+
+  event.preventDefault();
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
 gsap.matchMedia().add(
   {
     reduceMotion: '(prefers-reduced-motion: reduce)',

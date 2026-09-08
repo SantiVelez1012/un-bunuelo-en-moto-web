@@ -1,5 +1,6 @@
 ---
 import '../styles/globals.css';
+import Analytics from '@vercel/analytics/astro'
 
 const {
 	title = 'Un Buñuelo en Moto',
@@ -42,8 +43,10 @@ const socialImage = new URL(image, siteUrl).href;
 		<title>{title}</title>
 	</head>
 	<body>
+		
 		<slot />
 		<script src="../scripts/site-motion.ts"></script>
+		<Analytics />
 	</body>
 </html>
 

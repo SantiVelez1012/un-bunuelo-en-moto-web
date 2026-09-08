@@ -1,22 +1,243 @@
 ---
-// src/pages/index.astro
 import Layout from "../layouts/Layout.astro";
-import Hero from "../components/Hero/Hero.astro";
-import AboutMeSection from "../components/AboutMeSection/AboutMeSection.astro";
-import SocialProof from "../components/SocialProof.astro";
-import BlogGrid from "../components/BlogGrid.astro";
-import ShopTeaser from "../components/ShopTeaser.astro";
+import AdSlot from "../components/AdSlot.astro";
+import RoyalEnfieldSection from "../components/RoyalEnfieldSection.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 
+const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
 ---
 
-<Layout title="Inicio">
-  <Hero />
+<Layout
+  title="Un Buñuelo en Moto | Rodar, aprender y contar el camino"
+  description="Acompaña a Un Buñuelo en Moto en rutas, motos, experiencias y aprendizajes sobre dos ruedas."
+  canonicalPath="/"
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Un Buñuelo en Moto",
+    url: "https://unbunueloenmoto.com/",
+    description: "Rutas, motos y aprendizajes sobre dos ruedas.",
+    inLanguage: "es-CO",
+  }}
+>
+  <header
+    class="absolute inset-x-0 top-0 z-20 mx-auto flex max-w-[1320px] items-center justify-between px-5 py-5 md:px-10 lg:px-[72px]"
+  >
+    <a
+      class="flex min-h-11 items-center gap-2.5 text-sm font-bold tracking-wide"
+      href="#inicio"
+      aria-label="Un Buñuelo en Moto, inicio"
+    >
+      <img
+        class="size-10 object-contain"
+        src="/images/un-bunuelo-en-moto.png"
+        alt="Logo de Un Buñuelo en Moto"
+        width="40"
+        height="40"
+      />
+      <span>Un Buñuelo en Moto</span>
+    </a>
+    <nav
+      class="hidden items-center gap-8 text-[13px] text-retro-crema/70 md:flex"
+      aria-label="Navegación principal"
+    >
+      <a class="transition-colors hover:text-neon" href="#sobre-mi">Sobre mí</a>
+      <a class="transition-colors hover:text-neon" href="#contenido"
+        >Redes</a
+      >
+      <a class="transition-colors hover:text-neon" href="/blog">Blog</a>
+      <a class="transition-colors hover:text-neon" href="#comunidad"
+        >Comunidad</a
+      >
+    </nav>
+    <a
+      class="inline-flex min-h-10 items-center justify-center rounded-full bg-bunuelo px-4 text-xs font-bold text-retro-dark transition hover:bg-bunuelo-dark hover:-translate-y-0.5"
+      href={youtubeUrl}
+      target="_blank"
+      rel="noreferrer">Ver el canal</a
+    >
+  </header>
 
-  <AboutMeSection />
+  <main>
+    <section
+      class="relative flex min-h-[720px] items-end overflow-hidden bg-retro-dark md:min-h-[760px]"
+      id="inicio"
+    >
+      <img
+        class="absolute inset-0 size-full object-cover object-center"
+        src="/images/hero-banner.jpg"
+        alt="Motocicleta recorriendo una carretera de montaña"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-retro-dark/95 via-retro-dark/55 to-retro-dark/20"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-retro-dark via-transparent to-transparent"
+      >
+      </div>
+      <div
+        class="relative z-10 mx-auto w-full max-w-[1320px] px-5 pb-24 pt-36 md:px-10 md:pb-[105px] lg:px-[72px]"
+      >
+        <p
+          class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon"
+          data-hero-item
+        >
+          Canal de YouTube · Colombia
+        </p>
+        <h1
+          class="mb-7 max-w-[770px] text-[clamp(3rem,8vw,6.75rem)] font-bold leading-[0.94] tracking-[-0.06em]"
+          data-hero-item
+        >
+          Rodar, aprender<br /><em class="not-italic text-neon"
+            >y contar el camino.</em
+          >
+        </h1>
+        <p
+          class="mb-9 max-w-[470px] text-base leading-relaxed text-retro-crema/70 md:text-lg"
+          data-hero-item
+        >
+          Soy Un Buñuelo en Moto. Comparto rutas, motos, experiencias y todo lo
+          que aprendo en cada kilómetro.
+        </p>
+        <div
+          class="flex flex-col items-start gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-7"
+          data-hero-item
+        >
+          <a
+            class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-bunuelo px-6 text-[13px] font-bold text-retro-dark transition hover:bg-bunuelo-dark hover:-translate-y-0.5"
+            href={youtubeUrl}
+            target="_blank"
+            rel="noreferrer"
+            >Suscribirme en YouTube <span aria-hidden="true">↗</span></a
+          >
+          <a
+            class="text-[13px] font-bold text-retro-crema transition-colors hover:text-neon"
+            href="#sobre-mi"
+            >Conocer mi historia <span aria-hidden="true">↓</span></a
+          >
+        </div>
+      </div>
+      <div
+        class="absolute bottom-8 right-5 z-10 hidden items-center gap-3 text-[10px] uppercase tracking-[0.15em] text-retro-crema/50 [writing-mode:vertical-rl] md:flex lg:right-[72px]"
+      >
+        <span class="h-12 w-px bg-neon"></span>Descubre el camino
+      </div>
+    </section>
 
-  <SocialProof />
+    <AdSlot slot={import.meta.env.PUBLIC_GOOGLE_ADSENSE_SLOT_HOME} />
 
-  <BlogGrid />
+    <section
+      class="mx-auto grid max-w-[1320px] items-center gap-12 px-5 py-24 md:px-10 md:py-36 lg:grid-cols-[minmax(260px,.85fr)_minmax(300px,1fr)] lg:gap-[10vw] lg:px-[72px]"
+      id="sobre-mi"
+      data-reveal
+    >
+      <div
+        class="relative aspect-[4/5] min-h-[400px] overflow-hidden rounded-3xl md:aspect-[3/4] md:min-h-[560px]"
+      >
+        <img
+          class="absolute inset-0 h-full w-full object-cover object-center"
+          src="/images/about-rider.jpg"
+          alt="Motociclista preparando una ruta"
+          loading="lazy"
+        />
+      </div>
+      <div>
+        <p
+          class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon"
+        >
+          La persona detrás del casco
+        </p>
+        <h2
+          class="mb-7 text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-[0.95] tracking-[-0.06em]"
+        >
+          Más allá<br />de las rutas.
+        </h2>
+        <p class="max-w-[510px] text-[17px] leading-[1.7] text-retro-crema/70">
+          No soy experto en todo. Soy alguien que disfruta aprender, equivocarse
+          y seguir avanzando sobre dos ruedas. Este canal es mi forma de
+          compartir el garaje, las carreteras y las historias que aparecen
+          durante el camino.
+        </p>
+        <div
+          class="mt-12 grid grid-cols-3 gap-4 border-t border-asfalto/20 pt-6"
+          aria-label="Datos de la comunidad"
+        >
+          <div>
+            <strong class="block text-2xl text-neon">1</strong><span
+              class="mt-2 block text-[11px] leading-snug text-retro-crema/50"
+              >Una comunidad</span
+            >
+          </div><div>
+            <strong class="block text-2xl text-neon">∞</strong><span
+              class="mt-2 block text-[11px] leading-snug text-retro-crema/50"
+              >Kilómetros por delante</span
+            >
+          </div><div>
+            <strong class="block text-2xl text-neon">100%</strong><span
+              class="mt-2 block text-[11px] leading-snug text-retro-crema/50"
+              >Pasión motera</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <ShopTeaser />
+    <RoyalEnfieldSection />
+
+    <section class="bg-asfalto/10 px-5 py-24 md:px-10 md:py-36 lg:px-[72px]" id="contenido" data-reveal>
+      <div class="mx-auto max-w-[1176px]">
+        <div class="mb-14 max-w-3xl">
+          <p class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">Encuéntrame fuera de la carretera</p>
+          <h2 class="text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-[0.95] tracking-[-0.06em]">La rodada<br /><em class="not-italic text-neon">también continúa online.</em></h2>
+          <p class="mt-7 max-w-xl text-[17px] leading-[1.7] text-retro-crema/70">Sigue las rutas, las historias y los momentos que no caben en un solo video. Instagram es el punto de encuentro diario de la comunidad.</p>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2" data-reveal-stagger>
+          <a class="group flex min-h-[250px] flex-col justify-between rounded-3xl border border-neon/50 bg-neon p-7 text-retro-dark transition hover:-translate-y-1" href="https://www.instagram.com/unbunueloenmoto/" target="_blank" rel="noreferrer">
+            <span class="text-xs font-bold uppercase tracking-[0.18em]">Principal · Instagram</span>
+            <span><strong class="block text-4xl font-semibold">La comunidad se mueve aquí.</strong><span class="mt-5 inline-flex text-sm font-bold">Seguir en Instagram <span class="ml-2" aria-hidden="true">↗</span></span></span>
+          </a>
+          <div class="grid gap-4 sm:grid-cols-3">
+            <a class="flex min-h-[116px] flex-col justify-between rounded-3xl border border-asfalto/20 bg-asfalto/10 p-5 transition hover:border-neon hover:text-neon" href={youtubeUrl} target="_blank" rel="noreferrer"><span class="text-xs font-bold text-neon">01</span><span class="text-sm font-semibold">YouTube <span aria-hidden="true">↗</span></span></a>
+            <a class="flex min-h-[116px] flex-col justify-between rounded-3xl border border-asfalto/20 bg-asfalto/10 p-5 transition hover:border-neon hover:text-neon" href="https://www.tiktok.com/@unbunueloenmoto" target="_blank" rel="noreferrer"><span class="text-xs font-bold text-neon">02</span><span class="text-sm font-semibold">TikTok <span aria-hidden="true">↗</span></span></a>
+            <a class="flex min-h-[116px] flex-col justify-between rounded-3xl border border-asfalto/20 bg-asfalto/10 p-5 transition hover:border-neon hover:text-neon" href="https://www.facebook.com/profile.php?id=61565367096663" target="_blank" rel="noreferrer"><span class="text-xs font-bold text-neon">03</span><span class="text-sm font-semibold">Facebook <span aria-hidden="true">↗</span></span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="mx-auto grid max-w-[1320px] items-end gap-12 px-5 py-24 md:px-10 md:py-36 lg:grid-cols-[1fr_auto] lg:gap-16 lg:px-[72px]"
+      id="comunidad"
+      data-reveal
+    >
+      <div>
+        <p
+          class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon"
+        >
+          La comunidad
+        </p><h2
+          class="mb-7 text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-[0.95] tracking-[-0.06em]"
+        >
+          Cada ruta<br />tiene una historia.
+        </h2><p
+          class="max-w-[510px] text-[17px] leading-[1.7] text-retro-crema/70"
+        >
+          Suscríbete al canal y acompáñame en la próxima rodada. También puedes
+          seguir las aventuras en redes sociales desde la sección Redes.
+        </p>
+      </div>
+      <div class="flex flex-col items-start gap-7 lg:items-end">
+        <a
+          class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-bunuelo px-6 text-[13px] font-bold text-retro-dark transition hover:bg-bunuelo-dark hover:-translate-y-0.5"
+          href={youtubeUrl}
+          target="_blank"
+          rel="noreferrer"
+          >Ir al canal de YouTube <span aria-hidden="true">↗</span></a
+        >
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
 </Layout>
+

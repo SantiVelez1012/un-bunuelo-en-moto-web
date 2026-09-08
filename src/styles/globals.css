@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-retro-dark: #111111;
+  --color-bunuelo: #FF6B00;
+  --color-neon: #00FF66;
+  --color-asfalto: #2A2A2A;
+  --color-retro-crema: #F4EFE6;
+  --font-sans: 'Rubik', sans-serif;
+  --font-display: 'Oswald', sans-serif;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+    background: var(--color-retro-dark);
+  }
+
+  body {
+    min-width: 320px;
+    margin: 0;
+    background: var(--color-retro-dark);
+    color: var(--color-retro-crema);
+    font-family: var(--font-sans);
+    font-weight: 500;
+  }
+
+  h1,
+  h2,
+  h3,
+  strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-neon);
+    outline-offset: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

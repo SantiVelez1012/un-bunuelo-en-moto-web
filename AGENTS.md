@@ -1,5 +1,7 @@
 ## Development
 
+Use Yarn as the package manager for this repository. Prefer `yarn`, `yarn add`, `yarn build`, and `yarn dev` over npm commands.
+
 When starting the dev server, use background mode:
 
 ```

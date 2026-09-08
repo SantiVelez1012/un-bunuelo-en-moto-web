@@ -1,23 +1,50 @@
+---
+import '../styles/globals.css';
+
+const {
+	title = 'Un Buñuelo en Moto',
+	description = 'Rutas, motos y aprendizajes sobre dos ruedas.',
+	canonicalPath = Astro.url.pathname,
+	image = 'https://unbunueloenmoto.com/images/hero-banner.svg',
+	type = 'website',
+	structuredData,
+} = Astro.props;
+const siteUrl = 'https://unbunueloenmoto.com';
+const canonicalUrl = new URL(canonicalPath, siteUrl).href;
+const socialImage = new URL(image, siteUrl).href;
+const adsenseClientId = import.meta.env.PUBLIC_GOOGLE_ADSENSE_CLIENT_ID;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#11100e" />
+		<link rel="canonical" href={canonicalUrl} />
+		<meta property="og:type" content={type} />
+		<meta property="og:locale" content="es_CO" />
+		<meta property="og:site_name" content="Un Buñuelo en Moto" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={socialImage} />
+		<meta property="og:image:alt" content={title} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={socialImage} />
+		{structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		{adsenseClientId && <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`} crossorigin="anonymous"></script>}
+		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
+		<script src="../scripts/site-motion.ts"></script>
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

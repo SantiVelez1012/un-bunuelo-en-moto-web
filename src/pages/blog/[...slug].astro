@@ -1,0 +1,70 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, category, date, heroImage, tags } = post.data;
+const formattedDate = date.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
+const articleImage = new URL(heroImage, Astro.site ?? 'https://unbunueloenmoto.com').href;
+---
+
+<Layout
+  title={`${title} | Un Buñuelo en Moto`}
+  description={description}
+  canonicalPath={`/blog/${post.id}/`}
+  image={articleImage}
+  type="article"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    image: articleImage,
+    datePublished: date.toISOString(),
+    author: { '@type': 'Person', name: 'Un Buñuelo en Moto' },
+    publisher: { '@type': 'Organization', name: 'Un Buñuelo en Moto' },
+    mainEntityOfPage: `https://unbunueloenmoto.com/blog/${post.id}/`,
+    inLanguage: 'es-CO',
+  }}
+>
+  <SiteHeader currentPage="blog" />
+
+  <main>
+    <article>
+      <header class="border-b border-asfalto/20 bg-retro-dark px-5 pb-16 pt-40 md:px-10 md:pb-24 lg:px-[72px]" data-reveal>
+        <div class="mx-auto max-w-[900px]">
+          <a class="mb-10 inline-flex text-sm font-bold text-neon transition-colors hover:text-retro-crema" href="/blog">← Volver al blog</a>
+          <p class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">{category} · {formattedDate}</p>
+          <h1 class="max-w-4xl text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.9] tracking-[-0.07em]">{title}</h1>
+          <p class="mt-8 max-w-2xl text-lg leading-relaxed text-retro-crema/70">{description}</p>
+          <div class="mt-7 flex flex-wrap gap-2 text-xs text-retro-crema/55">{tags.map((tag) => <span class="rounded-full border border-asfalto/20 px-3 py-2">#{tag}</span>)}</div>
+        </div>
+      </header>
+
+      <AdSlot slot={import.meta.env.PUBLIC_GOOGLE_ADSENSE_SLOT_ARTICLE_TOP} />
+
+      <div class="mx-auto max-w-[1200px] px-5 py-12 md:px-10 md:py-20 lg:px-0" data-reveal>
+        <img class="aspect-[16/8] w-full rounded-3xl object-cover" src={heroImage} alt={title} loading="eager" />
+      </div>
+
+      <div class="prose prose-invert mx-auto max-w-[720px] px-5 pb-24 text-lg leading-relaxed text-retro-crema/80 md:px-10 md:pb-36 lg:px-0" data-reveal>
+        <Content />
+      </div>
+    </article>
+  </main>
+
+  <SiteFooter />
+</Layout>

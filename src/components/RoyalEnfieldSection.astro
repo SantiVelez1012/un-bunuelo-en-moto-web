@@ -1,0 +1,22 @@
+---
+const instagramUrl = 'https://www.instagram.com/unbunueloenmoto/';
+---
+
+<section class="mx-auto max-w-[1320px] px-5 py-24 md:px-10 md:py-36 lg:px-[72px]" id="royal-enfield" data-reveal>
+  <div class="grid overflow-hidden rounded-3xl border border-bunuelo/50 bg-bunuelo text-retro-dark md:grid-cols-[1.1fr_.9fr]">
+    <div class="p-8 md:p-14">
+      <p class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em]">Alianza motera · Medellín / Bogotá</p>
+      <h2 class="max-w-3xl text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-none tracking-[-0.06em]">¿Pensando en una Royal Enfield?</h2>
+      <p class="mt-7 max-w-xl text-[17px] leading-[1.7] text-retro-dark/75">Si estás buscando comprar una moto Royal Enfield en Medellín o Bogotá, escríbeme a Instagram y pregunta por el beneficio disponible para la comunidad de Un Buñuelo en Moto.</p>
+      <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+        <a class="inline-flex min-h-12 items-center justify-center rounded-full bg-retro-dark px-6 text-sm font-bold text-retro-crema transition hover:bg-asfalto" href={instagramUrl} target="_blank" rel="noreferrer">Comunícate conmigo <span class="ml-3" aria-hidden="true">↗</span></a>
+        <span class="text-xs font-semibold text-retro-dark/65">Sujeto a condiciones y disponibilidad.</span>
+      </div>
+    </div>
+    <div class="relative min-h-[280px] bg-retro-dark/10 md:min-h-full">
+      <slot name="image">
+        <img class="size-full min-h-[280px] object-cover" src="/images/royal-enfield.jpeg" alt="Placeholder para imagen Royal Enfield" width="900" height="700" loading="lazy" />
+      </slot>
+    </div>
+  </div>
+</section>

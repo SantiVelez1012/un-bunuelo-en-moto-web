@@ -6,7 +6,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    category: z.enum(['Rutas', 'Garaje', 'Equipamiento', 'Historias', 'Consejos', 'Comunidad']),
+    category: z.enum(['Motos', 'Beneficios', 'Rutas', 'Articulos moteros']),
     date: z.coerce.date(),
     heroImage: z.string().min(1),
     featured: z.boolean().default(false),

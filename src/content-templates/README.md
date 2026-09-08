@@ -19,7 +19,7 @@ se convierte en:
 
 La colección `blog` está definida en `src/content.config.ts`.
 
-- `category` agrupa el contenido principal: `Rutas`, `Garaje`, `Equipamiento`, `Historias`, `Consejos` o `Comunidad`.
+- `category` agrupa el contenido principal: `Motos`, `Beneficios`, `Rutas` o `Articulos moteros`.
 - `tags` permite añadir etiquetas más específicas sin crear nuevas rutas.
 - `date` controla el orden cronológico del índice.
 - `featured: true` convierte la publicación en el artículo destacado del índice.

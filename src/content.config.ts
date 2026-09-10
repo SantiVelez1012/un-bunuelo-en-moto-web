@@ -11,6 +11,9 @@ const blog = defineCollection({
     heroImage: z.string().min(1),
     featured: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
+    affiliateUrl: z.string().url().optional(),
+    affiliateLabel: z.string().optional(),
+    affiliateOffer: z.string().optional(),
   }),
 });
 

@@ -31,10 +31,13 @@ const assets = new Map(
 );
 
 const escapeYaml = (value) => value.replaceAll("'", "''");
-const categoryFor = (tags) => {
-  if (tags.includes('Motos')) return 'Motos';
-  if (tags.includes('Promociones')) return 'Beneficios';
-  return 'Articulos moteros';
+const categoriesFor = (tags) => {
+  const categories = [];
+  if (tags.includes('Motos')) categories.push('Motos');
+  if (tags.includes('Productos Moteros') || tags.includes('Productos')) categories.push('Productos');
+  if (tags.includes('Promociones') || tags.includes('Beneficios')) categories.push('Beneficios');
+  if (tags.includes('Viajes') || tags.includes('Rutas')) categories.push('Rutas');
+  return categories.length > 0 ? categories : ['Productos'];
 };
 
 const inlineMarkdown = (nodes = []) => nodes.map((node) => {
@@ -50,6 +53,7 @@ const inlineMarkdown = (nodes = []) => nodes.map((node) => {
 
   const value = inlineMarkdown(node.content);
   if (node.nodeType === 'hyperlink') return `[${value}](${node.data.uri})`;
+  const categories = categoriesFor(tags);
   return value;
 }).join('').trim();
 
@@ -122,7 +126,7 @@ for (const entry of posts) {
 
   const date = new Date(localized(fields.createdAt)).toISOString().slice(0, 10);
   const markdown = renderNodes(richText.content, slug, assetPaths).replace(/\n{3,}/g, '\n\n').trim();
-  const file = `---\ntitle: '${escapeYaml(localized(fields.title))}'\ndescription: '${escapeYaml(localized(fields.postSummary))}'\ncategory: '${categoryFor(tags)}'\ndate: ${date}\nheroImage: '${assetPaths.get(coverId)}'\nfeatured: false\ntags:\n${tags.map((tag) => `  - ${tag.toLowerCase().replaceAll(' ', '-')}`).join('\n')}\n---\n\n${markdown}\n`;
+  const file = `---\ntitle: '${escapeYaml(localized(fields.title))}'\ndescription: '${escapeYaml(localized(fields.postSummary))}'\ncategories:\n${categories.map((category) => `  - ${category}`).join('\n')}\ndate: ${date}\nheroImage: '${assetPaths.get(coverId)}'\nfeatured: false\ntags:\n${tags.map((tag) => `  - ${tag.toLowerCase().replaceAll(' ', '-')}`).join('\n')}\n---\n\n${markdown}\n`;
   await writeFile(destination, file);
   console.log(`Imported: ${slug}`);
 }

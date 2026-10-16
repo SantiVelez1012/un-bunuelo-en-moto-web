@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from "../layouts/Layout.astro";
 import AdSlot from "../components/AdSlot.astro";
 import RoyalEnfieldSection from "../components/RoyalEnfieldSection.astro";
@@ -6,6 +7,14 @@ import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 
 const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
+const latestPosts = (await getCollection('blog'))
+  .sort((first, second) => second.data.date.valueOf() - first.data.date.valueOf())
+  .slice(0, 3);
+const postCategories = (post: (typeof latestPosts)[number]) => post.data.categories ?? (post.data.category ? [post.data.category] : []);
+const featuredPost = latestPosts[0];
+const supportingPosts = latestPosts.slice(1);
+const dateFormat = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' } as const;
+const formatDate = (date: Date) => date.toLocaleDateString('es-CO', dateFormat);
 ---
 
 <Layout
@@ -23,9 +32,9 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
 >
   <SiteHeader currentPage="home" />
 
-  <main>
+  <main id="main-content">
     <section
-      class="relative flex min-h-[720px] items-end overflow-hidden bg-retro-dark md:min-h-[760px]"
+      class="relative flex min-h-[100svh] items-end overflow-hidden bg-retro-dark"
       id="inicio"
     >
       <img
@@ -45,14 +54,8 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
       <div
         class="relative z-10 mx-auto w-full max-w-[1320px] px-5 pb-24 pt-36 md:px-10 md:pb-[105px] lg:px-[72px]"
       >
-        <p
-          class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon"
-          data-hero-item
-        >
-          Canal de YouTube · Colombia
-        </p>
         <h1
-          class="mb-7 max-w-[770px] text-[clamp(3rem,8vw,6.75rem)] font-bold leading-[0.94] tracking-[-0.06em]"
+          class="mb-7 max-w-[1100px] text-balance text-[clamp(3rem,8vw,6.75rem)] font-bold leading-[0.94] tracking-[-0.03em]"
           data-hero-item
         >
           Rodar, aprender<br /><em class="not-italic text-neon"
@@ -63,8 +66,8 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
           class="mb-9 max-w-[470px] text-base leading-relaxed text-retro-crema/70 md:text-lg"
           data-hero-item
         >
-          Soy Un Buñuelo en Moto. Comparto rutas, motos, experiencias y todo lo
-          que aprendo en cada kilómetro.
+          Soy Un Buñuelo en Moto, un canal colombiano de rutas, motos y todo lo
+          que voy aprendiendo en cada kilómetro.
         </p>
         <div
           class="flex flex-col items-start gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-7"
@@ -75,20 +78,15 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
             href={youtubeUrl}
             target="_blank"
             rel="noreferrer"
-            >Suscribirme en YouTube <span aria-hidden="true">↗</span></a
+            >Suscribirme en YouTube</a
           >
           <a
             class="text-[13px] font-bold text-retro-crema transition-colors hover:text-neon"
-            href="/"
+            href="#sobre-mi"
             data-scroll-target="sobre-mi"
-            >Conocer mi historia <span aria-hidden="true">↓</span></a
+            >Conocer mi historia</a
           >
         </div>
-      </div>
-      <div
-        class="absolute bottom-8 right-5 z-10 hidden items-center gap-3 text-[10px] uppercase tracking-[0.15em] text-retro-crema/50 [writing-mode:vertical-rl] md:flex lg:right-[72px]"
-      >
-        <span class="h-12 w-px bg-neon"></span>Descubre el camino
       </div>
     </section>
 
@@ -99,9 +97,7 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
       id="sobre-mi"
       data-reveal
     >
-      <div
-        class="relative aspect-[4/5] min-h-[400px] overflow-hidden rounded-3xl md:aspect-[3/4] md:min-h-[560px]"
-      >
+      <div class="relative aspect-[4/5] overflow-hidden rounded-2xl md:aspect-[3/4]">
         <img
           class="absolute inset-0 h-full w-full object-cover object-center"
           src="/images/about-rider.jpg"
@@ -110,13 +106,8 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
         />
       </div>
       <div>
-        <p
-          class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon"
-        >
-          La persona detrás del casco
-        </p>
         <h2
-          class="mb-7 text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-[0.95] tracking-[-0.06em]"
+          class="mb-7 text-balance text-[clamp(2.625rem,6vw,5rem)] font-bold leading-[0.95] tracking-[-0.03em]"
         >
           Más allá<br />de las rutas.
         </h2>
@@ -126,48 +117,64 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
           compartir el garaje, las carreteras y las historias que aparecen
           durante el camino.
         </p>
-        <div
-          class="mt-12 grid grid-cols-3 gap-4 border-t border-asfalto/20 pt-6"
-          aria-label="Datos de la comunidad"
-        >
-          <div>
-            <strong class="block text-2xl text-neon">1</strong><span
-              class="mt-2 block text-[11px] leading-snug text-retro-crema/50"
-              >Una comunidad</span
-            >
-          </div><div>
-            <strong class="block text-2xl text-neon">∞</strong><span
-              class="mt-2 block text-[11px] leading-snug text-retro-crema/50"
-              >Kilómetros por delante</span
-            >
-          </div><div>
-            <strong class="block text-2xl text-neon">100%</strong><span
-              class="mt-2 block text-[11px] leading-snug text-retro-crema/50"
-              >Pasión motera</span
-            >
-          </div>
-        </div>
+        <a class="mt-8 inline-flex min-h-11 items-center text-base font-bold text-neon underline decoration-transparent transition-colors hover:decoration-current" href="/blog">Explorar el blog</a>
       </div>
+    </section>
+
+    <section class="mx-auto max-w-[1320px] px-5 py-20 md:px-10 md:py-28 lg:px-[72px]" id="blog" aria-labelledby="home-blog-title" data-reveal>
+      <div class="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <h2 id="home-blog-title" class="text-balance font-display text-4xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">Del garaje, al blog.</h2>
+        <a class="min-h-11 inline-flex items-center text-base font-bold text-neon underline decoration-transparent transition-colors hover:decoration-current" href="/blog">Todas las publicaciones</a>
+      </div>
+
+      {featuredPost ? <div class="grid items-start gap-10 lg:grid-cols-[1.1fr_.9fr] lg:gap-14">
+        <article class="group">
+          <a class="block" href={`/blog/${featuredPost.id}`}>
+            <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-asfalto/20">
+              <img class="size-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]" src={featuredPost.data.heroImage} alt={featuredPost.data.title} loading="lazy" />
+            </div>
+            <h3 class="mt-5 max-w-3xl text-balance font-display text-[22px] font-semibold leading-tight transition-colors group-hover:text-neon sm:text-3xl md:text-4xl">{featuredPost.data.title}</h3>
+            <p class="mt-4 max-w-[65ch] text-base leading-relaxed text-retro-crema/75">{featuredPost.data.description}</p>
+            <p class="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-neon">{postCategories(featuredPost).map((category) => <span>{category}</span>)}<span class="text-retro-crema/70">{formatDate(featuredPost.data.date)}</span></p>
+          </a>
+        </article>
+
+        <div class="flex flex-col gap-8 lg:pt-1">
+          {supportingPosts.map((post) => (
+            <article class="group">
+              <a class="grid grid-cols-[minmax(96px,0.42fr)_1fr] items-start gap-5 sm:grid-cols-[minmax(120px,0.42fr)_1fr]" href={`/blog/${post.id}`}>
+                <div class="aspect-[4/3] overflow-hidden rounded-xl bg-asfalto/20">
+                  <img class="size-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]" src={post.data.heroImage} alt={post.data.title} loading="lazy" />
+                </div>
+                <div>
+                  <h3 class="mt-2 text-balance font-display text-xl font-semibold leading-snug transition-colors group-hover:text-neon sm:text-2xl">{post.data.title}</h3>
+                  <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-retro-crema/75">{post.data.description}</p>
+                  <p class="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-sm font-semibold text-neon">{postCategories(post).map((category) => <span>{category}</span>)}<span class="text-retro-crema/70">{formatDate(post.data.date)}</span></p>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div> : <p class="text-base text-retro-crema/75">Todavía no hay publicaciones disponibles.</p>}
     </section>
 
     <RoyalEnfieldSection />
 
-    <section class="bg-asfalto/10 px-5 py-24 md:px-10 md:py-36 lg:px-[72px]" id="contenido" data-reveal>
+    <section class="bg-asfalto/10 px-5 py-20 md:px-10 md:py-28 lg:px-[72px]" id="contenido" data-reveal>
       <div class="mx-auto max-w-[1176px]">
         <div class="mb-14 max-w-3xl">
-          <p class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">Encuéntrame fuera de la carretera</p>
-          <h2 class="text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-[0.95] tracking-[-0.06em]">La rodada<br /><em class="not-italic text-neon">también continúa online.</em></h2>
-          <p class="mt-7 max-w-xl text-[17px] leading-[1.7] text-retro-crema/70">Sigue las rutas, las historias y los momentos que no caben en un solo video. Instagram es el punto de encuentro diario de la comunidad.</p>
+          <h2 id="comunidad" class="text-balance text-[clamp(2.625rem,6vw,5rem)] font-bold leading-[0.95] tracking-[-0.03em]">La ruta sigue en redes.</h2>
+          <p class="mt-6 max-w-[65ch] text-base leading-relaxed text-retro-crema/80 md:text-lg">Videos, rutas y conversaciones de la comunidad, también fuera de la carretera.</p>
         </div>
-        <div class="grid gap-4 md:grid-cols-2" data-reveal-stagger>
-          <a class="group flex min-h-[250px] flex-col justify-between rounded-3xl border border-neon/50 bg-neon p-7 text-retro-dark transition hover:-translate-y-1" href="https://www.instagram.com/unbunueloenmoto/" target="_blank" rel="noreferrer">
-            <span class="text-xs font-bold uppercase tracking-[0.18em]">Principal · Instagram</span>
-            <span><strong class="block text-4xl font-semibold">La comunidad se mueve aquí.</strong><span class="mt-5 inline-flex text-sm font-bold">Seguir en Instagram <span class="ml-2" aria-hidden="true">↗</span></span></span>
+        <div class="grid gap-10 md:grid-cols-[1fr_1fr] md:gap-16" data-reveal-stagger>
+          <a class="group flex min-h-[220px] flex-col justify-between rounded-2xl bg-neon p-7 text-retro-dark transition-transform duration-200 ease-out hover:-translate-y-1 active:scale-[0.99] sm:p-9" href="https://www.instagram.com/unbunueloenmoto/" target="_blank" rel="noreferrer">
+            <span class="font-display text-3xl font-semibold leading-tight sm:text-4xl">Motos y rutas en Instagram.</span>
+            <span class="inline-flex min-h-11 items-center text-base font-bold underline decoration-transparent transition-colors group-hover:decoration-current">Seguir en Instagram</span>
           </a>
-          <div class="grid gap-4 sm:grid-cols-3">
-            <a class="flex min-h-[116px] flex-col justify-between rounded-3xl border border-asfalto/20 bg-asfalto/10 p-5 transition hover:border-neon hover:text-neon" href={youtubeUrl} target="_blank" rel="noreferrer"><span class="text-xs font-bold text-neon">01</span><span class="text-sm font-semibold">YouTube <span aria-hidden="true">↗</span></span></a>
-            <a class="flex min-h-[116px] flex-col justify-between rounded-3xl border border-asfalto/20 bg-asfalto/10 p-5 transition hover:border-neon hover:text-neon" href="https://www.tiktok.com/@unbunueloenmoto" target="_blank" rel="noreferrer"><span class="text-xs font-bold text-neon">02</span><span class="text-sm font-semibold">TikTok <span aria-hidden="true">↗</span></span></a>
-            <a class="flex min-h-[116px] flex-col justify-between rounded-3xl border border-asfalto/20 bg-asfalto/10 p-5 transition hover:border-neon hover:text-neon" href="https://www.facebook.com/profile.php?id=61565367096663" target="_blank" rel="noreferrer"><span class="text-xs font-bold text-neon">03</span><span class="text-sm font-semibold">Facebook <span aria-hidden="true">↗</span></span></a>
+          <div class="flex flex-col justify-center gap-3">
+            <a class="flex min-h-14 items-center justify-between gap-4 text-lg font-semibold transition-colors hover:text-neon" href={youtubeUrl} target="_blank" rel="noreferrer"><span>YouTube</span><span class="text-sm text-retro-crema/65">Rutas y pruebas</span></a>
+            <a class="flex min-h-14 items-center justify-between gap-4 text-lg font-semibold transition-colors hover:text-neon" href="https://www.tiktok.com/@unbunueloenmoto" target="_blank" rel="noreferrer"><span>TikTok</span><span class="text-sm text-retro-crema/65">Clips de carretera</span></a>
+            <a class="flex min-h-14 items-center justify-between gap-4 text-lg font-semibold transition-colors hover:text-neon" href="https://www.facebook.com/profile.php?id=61565367096663" target="_blank" rel="noreferrer"><span>Facebook</span><span class="text-sm text-retro-crema/65">La comunidad</span></a>
           </div>
         </div>
       </div>
@@ -179,28 +186,16 @@ const youtubeUrl = "https://youtube.com/@unbunueloenmoto";
       data-reveal
     >
       <div>
-        <p
-          class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon"
-        >
-          La comunidad
-        </p><h2
-          class="mb-7 text-[clamp(2.625rem,6vw,5.125rem)] font-bold leading-[0.95] tracking-[-0.06em]"
-        >
-          Cada ruta<br />tiene una historia.
-        </h2><p
-          class="max-w-[510px] text-[17px] leading-[1.7] text-retro-crema/70"
-        >
-          Suscríbete al canal y acompáñame en la próxima rodada. También puedes
-          seguir las aventuras en redes sociales desde la sección Redes.
-        </p>
+        <h2 class="mb-6 max-w-3xl text-balance text-[clamp(2.625rem,6vw,5rem)] font-bold leading-[0.95] tracking-[-0.03em]">Nos vemos en la próxima ruta.</h2>
+        <p class="max-w-[65ch] text-base leading-relaxed text-retro-crema/80 md:text-lg">Acompáñame en el canal y cuéntame qué moto o camino quieres ver después.</p>
       </div>
       <div class="flex flex-col items-start gap-7 lg:items-end">
         <a
-          class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-bunuelo px-6 text-[13px] font-bold text-retro-dark transition hover:bg-bunuelo-dark hover:-translate-y-0.5"
+          class="inline-flex min-h-12 items-center justify-center rounded-full bg-bunuelo px-6 text-sm font-bold text-retro-dark transition-colors duration-200 hover:bg-bunuelo-dark active:scale-[0.98]"
           href={youtubeUrl}
           target="_blank"
           rel="noreferrer"
-          >Ir al canal de YouTube <span aria-hidden="true">↗</span></a
+          >Ir al canal de YouTube</a
         >
       </div>
     </section>

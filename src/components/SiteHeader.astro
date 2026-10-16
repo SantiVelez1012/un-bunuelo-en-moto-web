@@ -2,70 +2,82 @@
 interface Props {
   currentPage?: 'home' | 'blog' | 'none';
 }
+type NavItem = { label: string; href: string; section?: string; current?: boolean };
 
 const { currentPage = 'home' } = Astro.props;
 const youtubeUrl = 'https://youtube.com/@unbunueloenmoto';
-const homeLink = currentPage === 'home' ? '/' : '/';
+const navItems: NavItem[] = currentPage === 'home'
+  ? [
+      { label: 'Sobre mí', href: '#sobre-mi', section: 'sobre-mi' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Redes', href: '#contenido', section: 'contenido' },
+      { label: 'Comunidad', href: '#comunidad', section: 'comunidad' },
+    ]
+  : currentPage === 'blog'
+    ? [
+        { label: 'Inicio', href: '/' },
+        { label: 'Blog', href: '/blog', current: true },
+        { label: 'Sobre mí', href: '/#sobre-mi' },
+        { label: 'Redes', href: '/#contenido' },
+      ]
+    : [
+        { label: 'Inicio', href: '/' },
+        { label: 'Blog', href: '/blog' },
+      ];
 ---
 
 <header class="absolute inset-x-0 top-0 z-20 mx-auto max-w-[1320px] px-5 py-5 md:px-10 lg:px-[72px]">
   <div class="flex items-center justify-between gap-3 lg:gap-4">
-    <a class="flex min-h-11 items-center gap-2.5 text-sm font-bold tracking-wide lg:mr-2" href={homeLink} aria-label="Un Buñuelo en Moto, inicio">
+    <a class="flex min-h-11 items-center gap-2.5 text-sm font-bold tracking-wide lg:mr-2" href="/" aria-label="Un Buñuelo en Moto, inicio">
       <img class="size-10 object-contain" src="/images/un-bunuelo-en-moto.png" alt="Un Buñuelo en Moto" width="40" height="40" />
       <span>Un Buñuelo en Moto</span>
     </a>
 
-    <nav class="hidden items-center gap-8 text-[13px] text-retro-crema/70 lg:ml-6 lg:flex" aria-label="Navegación principal">
-      {currentPage === 'home' ? <>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/" data-scroll-target="sobre-mi">Sobre mí</a>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/" data-scroll-target="contenido">Redes</a>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/blog">Blog</a>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/" data-scroll-target="comunidad">Comunidad</a>
-      </> : currentPage === 'blog' ? <>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/">Inicio</a>
-        <a class="text-neon transition-all duration-300 ease-out hover:-translate-y-0.5" href="/blog" aria-current="page">Blog</a>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/" data-scroll-target="sobre-mi">Sobre mí</a>
-      </> : <>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/">Inicio</a>
-        <a class="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-neon" href="/blog">Blog</a>
-      </>}
+    <nav class="hidden items-center gap-7 text-sm text-retro-crema/80 lg:ml-6 lg:flex" aria-label="Navegación principal">
+      {navItems.map((item) => (
+        <a
+          class={`min-h-11 inline-flex items-center transition-colors duration-200 hover:text-neon ${item.current ? 'text-neon' : ''}`}
+          href={item.href}
+          data-scroll-target={item.section}
+          aria-current={item.current ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
     </nav>
 
     <div class="ml-auto flex items-center gap-3 lg:gap-4">
-      <a class="hidden min-h-10 items-center justify-center rounded-full bg-bunuelo px-4 text-xs font-bold text-retro-dark transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-bunuelo-dark lg:inline-flex" href={youtubeUrl} target="_blank" rel="noreferrer">Ver el canal</a>
+      <a class="hidden min-h-11 items-center justify-center rounded-full bg-bunuelo px-5 text-sm font-bold text-retro-dark transition-colors duration-200 hover:bg-bunuelo-dark active:scale-[0.98] lg:inline-flex" href={youtubeUrl} target="_blank" rel="noreferrer">Ver el canal</a>
 
       <div class="relative md:hidden">
         <button
           id="mobile-menu-button"
-          class="flex h-11 w-11 items-center justify-center rounded-full border border-asfalto/20 bg-asfalto/10 text-retro-crema transition-all duration-300 ease-out hover:border-neon hover:text-neon hover:-translate-y-0.5"
+          class="peer group flex h-11 w-11 items-center justify-center rounded-full bg-asfalto/20 text-retro-crema transition-colors duration-200 hover:text-neon active:scale-[0.98]"
           type="button"
           aria-expanded="false"
           aria-controls="mobile-menu-panel"
           aria-label="Abrir menú"
         >
-          <span class="flex flex-col gap-1.5">
-            <span class="block h-0.5 w-5 rounded-full bg-current"></span>
-            <span class="block h-0.5 w-5 rounded-full bg-current"></span>
-            <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+          <span class="flex size-5 flex-col items-center justify-center gap-1.25" aria-hidden="true">
+            <span class="block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ease-out group-aria-expanded:translate-y-1.75 group-aria-expanded:rotate-45"></span>
+            <span class="block h-0.5 w-5 rounded-full bg-current transition-opacity duration-150 group-aria-expanded:opacity-0"></span>
+            <span class="block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ease-out group-aria-expanded:-translate-y-1.75 group-aria-expanded:-rotate-45"></span>
           </span>
         </button>
 
-        <div id="mobile-menu-panel" class="absolute right-0 top-full mt-3 hidden w-[220px] rounded-2xl border border-asfalto/20 bg-retro-dark/95 p-3 shadow-2xl backdrop-blur-md transition-all duration-300 ease-out" role="menu" aria-label="Menú móvil">
-          <nav class="flex flex-col gap-2 text-sm text-retro-crema/80" aria-label="Menú móvil">
-            {currentPage === 'home' ? <>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/" data-scroll-target="sobre-mi">Sobre mí</a>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/" data-scroll-target="contenido">Redes</a>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/blog">Blog</a>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/" data-scroll-target="comunidad">Comunidad</a>
-            </> : currentPage === 'blog' ? <>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/">Inicio</a>
-              <a class="rounded-xl px-3 py-2 text-neon transition-all duration-300 ease-out hover:bg-asfalto/10" href="/blog" aria-current="page">Blog</a>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/" data-scroll-target="sobre-mi">Sobre mí</a>
-            </> : <>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/">Inicio</a>
-              <a class="rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:bg-asfalto/10 hover:text-neon" href="/blog">Blog</a>
-            </>}
-            <a class="mt-2 inline-flex min-h-11 items-center justify-center rounded-full bg-bunuelo px-4 text-xs font-bold text-retro-dark transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-bunuelo-dark" href={youtubeUrl} target="_blank" rel="noreferrer">Ver el canal</a>
+        <div id="mobile-menu-panel" class="invisible pointer-events-none absolute right-0 top-full mt-3 w-60 origin-top-right translate-y-2 scale-[0.98] rounded-2xl bg-retro-dark p-3 opacity-0 shadow-2xl transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] peer-aria-expanded:visible peer-aria-expanded:pointer-events-auto peer-aria-expanded:translate-y-0 peer-aria-expanded:scale-100 peer-aria-expanded:opacity-100 motion-reduce:transition-none" aria-hidden="true" inert>
+          <nav class="flex flex-col gap-1 text-base text-retro-crema" aria-label="Menú móvil">
+            {navItems.map((item) => (
+              <a
+                class={`flex min-h-11 items-center rounded-xl px-3 transition-colors duration-150 hover:bg-asfalto/30 hover:text-neon ${item.current ? 'text-neon' : ''}`}
+                href={item.href}
+                data-scroll-target={item.section}
+                aria-current={item.current ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+            <a class="mt-2 inline-flex min-h-11 items-center justify-center rounded-full bg-bunuelo px-4 text-sm font-bold text-retro-dark transition-colors duration-200 hover:bg-bunuelo-dark active:scale-[0.98]" href={youtubeUrl} target="_blank" rel="noreferrer">Ver el canal</a>
           </nav>
         </div>
       </div>
@@ -78,10 +90,17 @@ const homeLink = currentPage === 'home' ? '/' : '/';
   const mobileMenuPanel = document.getElementById('mobile-menu-panel');
 
   if (mobileMenuButton && mobileMenuPanel) {
+    const setMenuOpen = (isOpen: boolean) => {
+      mobileMenuButton.setAttribute('aria-expanded', String(isOpen));
+      mobileMenuButton.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+      mobileMenuPanel.setAttribute('aria-hidden', String(!isOpen));
+      mobileMenuPanel.inert = !isOpen;
+    };
+
     mobileMenuButton.addEventListener('click', () => {
       const isOpen = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-      mobileMenuButton.setAttribute('aria-expanded', String(!isOpen));
-      mobileMenuPanel.classList.toggle('hidden', isOpen);
+      setMenuOpen(!isOpen);
+      if (!isOpen) mobileMenuPanel.querySelector('a')?.focus();
     });
 
     document.addEventListener('click', (event) => {
@@ -89,9 +108,18 @@ const homeLink = currentPage === 'home' ? '/' : '/';
       if (!(target instanceof Node)) return;
 
       if (!mobileMenuButton.contains(target) && !mobileMenuPanel.contains(target)) {
-        mobileMenuButton.setAttribute('aria-expanded', 'false');
-        mobileMenuPanel.classList.add('hidden');
+        setMenuOpen(false);
       }
+    });
+
+    mobileMenuPanel.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a')) setMenuOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || mobileMenuButton.getAttribute('aria-expanded') !== 'true') return;
+      setMenuOpen(false);
+      mobileMenuButton.focus();
     });
   }
 </script>

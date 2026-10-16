@@ -25,6 +25,7 @@ gsap.matchMedia().add(
 
     const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
     intro.from('[data-hero-item]', { autoAlpha: 0, y: 28, duration: 0.7, stagger: 0.1 });
+    gsap.fromTo('#inicio img', { scale: 1.04 }, { scale: 1, duration: 1.6, ease: 'power3.out', clearProps: 'transform' });
 
     gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((section) => {
       gsap.from(section, {

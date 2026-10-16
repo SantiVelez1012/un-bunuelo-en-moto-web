@@ -7,8 +7,9 @@ import SiteHeader from '../components/SiteHeader.astro';
 import RoyalEnfieldSection from '../components/RoyalEnfieldSection.astro';
 
 const youtubeUrl = 'https://youtube.com/@unbunueloenmoto';
-const categories = ['Motos', 'Beneficios', 'Rutas', 'Articulos moteros'];
+const categories = ['Motos', 'Productos', 'Beneficios', 'Rutas'];
 const posts = (await getCollection('blog')).sort((first, second) => second.data.date.valueOf() - first.data.date.valueOf());
+const postCategories = (post: (typeof posts)[number]) => post.data.categories ?? (post.data.category ? [post.data.category] : []);
 const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
 const regularPosts = featuredPost ? posts.filter((post) => post.id !== featuredPost.id) : [];
 const dateFormat = { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' } as const;
@@ -30,64 +31,62 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-CO', dateFormat);
 >
   <SiteHeader currentPage="blog" />
 
-  <main>
-    <section class="border-b border-asfalto/20 bg-retro-dark px-5 pb-20 pt-40 md:px-10 md:pb-28 lg:px-[72px]" data-reveal>
+  <main id="main-content">
+    <section class="bg-retro-dark px-5 pb-16 pt-40 md:px-10 md:pb-24 lg:px-[72px]" data-reveal>
       <div class="mx-auto max-w-[1176px]">
-        <p class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">El cuaderno de ruta</p>
-        <h1 class="max-w-4xl text-[clamp(3.5rem,9vw,8rem)] font-bold leading-[0.88] tracking-[-0.07em]">Historias para<br /><em class="not-italic text-neon">seguir rodando.</em></h1>
-        <p class="mt-8 max-w-xl text-lg leading-relaxed text-retro-crema/70">Crónicas, consejos y pensamientos nacidos entre el garaje, la carretera y las conversaciones que aparecen en el camino.</p>
+        <h1 class="max-w-4xl text-balance text-[clamp(3rem,8vw,6rem)] font-bold leading-[0.92] tracking-[-0.03em]">Historias para<br /><em class="not-italic text-neon">seguir rodando.</em></h1>
+        <p class="mt-7 max-w-[65ch] text-base leading-relaxed text-retro-crema/80 md:text-lg">Pruebas de motos, rutas y equipo que acompaña cada salida.</p>
       </div>
     </section>
 
-    <section class="mx-auto max-w-[1176px] px-5 py-12 md:px-10 md:py-16 lg:px-0" aria-label="Categorías del blog" data-reveal>
-      <div class="flex gap-2 overflow-x-auto border-b border-asfalto/20 pb-6 text-xs font-bold uppercase tracking-[0.14em] text-retro-crema/60 sm:flex-wrap sm:gap-3 sm:pb-8" data-blog-filters>
-        <a class="shrink-0 rounded-full bg-neon px-4 py-3 text-retro-dark transition" href="/blog" data-category-filter="Todos" data-scroll-target="articulos">Todos</a>
+    <nav class="mx-auto max-w-[1176px] px-5 py-10 md:px-10 md:py-14 lg:px-0" aria-label="Categorías del blog" data-reveal>
+      <div class="flex gap-2 overflow-x-auto sm:flex-wrap sm:gap-3" data-blog-filters>
+        <button class="min-h-11 shrink-0 rounded-full bg-neon px-4 py-3 text-[13px] font-bold text-retro-dark transition-colors" type="button" data-category-filter="Todos" aria-pressed="true">Todos</button>
         {categories.map((category) => (
-          <a
-            class="shrink-0 rounded-full border border-asfalto/20 px-4 py-3 transition hover:border-neon hover:text-neon"
-            href={`/blog?category=${encodeURIComponent(category)}`}
+          <button
+            class="min-h-11 shrink-0 rounded-full bg-asfalto/20 px-4 py-3 text-[13px] font-bold text-retro-crema/85 transition-colors hover:bg-asfalto/50 hover:text-neon"
+            type="button"
             data-category-filter={category}
-            data-scroll-target={category.toLowerCase().replace(/\s+/g, '-')}
+            aria-pressed="false"
           >
             {category}
-          </a>
+          </button>
         ))}
       </div>
-    </section>
+    </nav>
 
     <AdSlot slot={import.meta.env.PUBLIC_GOOGLE_ADSENSE_SLOT_BLOG_TOP} />
 
-    <section class="mx-auto max-w-[1176px] px-5 pb-20 md:px-10 md:pb-36 lg:px-0" id="articulos">
-      <p class="mb-7 hidden text-sm font-semibold text-retro-crema/65" data-blog-result-count aria-live="polite"></p>
-      {featuredPost ? <article class="grid overflow-hidden rounded-2xl border border-asfalto/20 bg-asfalto/10 sm:rounded-3xl md:grid-cols-[1.1fr_1fr]" data-blog-post data-category={featuredPost.data.category} data-reveal>
+    <section class="mx-auto max-w-[1176px] px-5 pb-20 md:px-10 md:pb-28 lg:px-0" id="articulos" aria-label="Publicaciones">
+      <p class="mb-7 hidden text-base font-semibold text-retro-crema/80" data-blog-result-count aria-live="polite"></p>
+      {featuredPost ? <article class="grid overflow-hidden rounded-2xl border border-asfalto/20 bg-asfalto/10 sm:rounded-3xl md:grid-cols-[1.1fr_1fr]" data-blog-post data-categories={postCategories(featuredPost).join('|')} data-reveal>
         <img class="aspect-[4/3] w-full object-cover md:h-full md:min-h-[320px] md:aspect-auto" src={featuredPost.data.heroImage} alt={featuredPost.data.title} loading="eager" />
-        <div class="flex flex-col justify-end p-5 sm:p-7 md:p-12"><p class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-neon sm:mb-5 sm:text-[11px] sm:tracking-[0.2em]">Artículo destacado · {featuredPost.data.category}</p><h2 class="text-[1.75rem] font-bold leading-[1.05] tracking-tight sm:text-3xl md:text-5xl">{featuredPost.data.title}</h2><p class="mt-4 max-w-md text-sm leading-relaxed text-retro-crema/70 sm:mt-5 sm:text-base">{featuredPost.data.description}</p><a class="mt-6 inline-flex min-h-11 items-center gap-3 text-sm font-bold text-neon sm:mt-8" href={`/blog/${featuredPost.id}`}>Leer la historia <span aria-hidden="true">↗</span></a></div>
+        <div class="flex flex-col justify-end p-5 sm:p-7 md:p-12"><p class="mb-4 flex flex-wrap gap-x-2 text-sm font-bold text-neon sm:mb-5"><span>Artículo destacado</span>{postCategories(featuredPost).map((category) => <span>{category}</span>)}</p><h2 class="text-balance text-[1.75rem] font-bold leading-[1.05] tracking-[-0.02em] sm:text-3xl md:text-5xl">{featuredPost.data.title}</h2><p class="mt-4 max-w-[60ch] text-base leading-relaxed text-retro-crema/80 sm:mt-5">{featuredPost.data.description}</p><a class="mt-6 inline-flex min-h-11 items-center text-base font-bold text-neon underline decoration-transparent transition-colors hover:decoration-current sm:mt-8" href={`/blog/${featuredPost.id}`}>Leer la historia</a></div>
       </article> : null}
 
       {regularPosts.length > 0 ? (
         <div class="mt-14 grid gap-x-5 gap-y-12 sm:mt-20 sm:gap-y-16 md:grid-cols-2 lg:grid-cols-3" data-blog-post-list data-reveal-stagger>
           {regularPosts.map((post) => (
-            <article class="group" id={post.data.category.toLowerCase().replace(/\s+/g, '-') } data-blog-post data-category={post.data.category}>
+            <article class="group" data-blog-post data-categories={postCategories(post).join('|')}>
               <a class="block" href={`/blog/${post.id}`} aria-label={`Leer: ${post.data.title}`}>
                 <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-asfalto/10"><img class="size-full object-cover transition duration-500 group-hover:scale-105" src={post.data.heroImage} alt={post.data.title} loading="lazy" /></div>
-                <div class="pt-5"><div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.14em] text-neon"><span>{post.data.category}</span><span class="text-retro-crema/45">{formatDate(post.data.date)}</span></div><h2 class="mt-4 text-2xl font-bold leading-tight tracking-tight transition-colors group-hover:text-neon">{post.data.title}</h2><p class="mt-3 text-sm leading-relaxed text-retro-crema/65">{post.data.description}</p><span class="mt-5 inline-flex text-sm font-bold text-retro-crema">Leer más <span class="ml-2 text-neon" aria-hidden="true">↗</span></span></div>
+                <div class="pt-5"><div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] font-semibold text-neon">{postCategories(post).map((category) => <span>{category}</span>)}<span class="text-retro-crema/75">{formatDate(post.data.date)}</span></div><h2 class="mt-3 text-balance text-2xl font-bold leading-tight tracking-[-0.02em] transition-colors group-hover:text-neon">{post.data.title}</h2><p class="mt-3 text-base leading-relaxed text-retro-crema/80">{post.data.description}</p><span class="mt-4 inline-flex min-h-11 items-center text-base font-bold text-retro-crema underline decoration-transparent transition-colors group-hover:decoration-current">Leer más</span></div>
               </a>
             </article>
           ))}
         </div>
       ) : null}
-      <div class="hidden rounded-2xl border border-asfalto/20 bg-asfalto/10 px-6 py-12 text-center sm:rounded-3xl sm:px-10" data-blog-empty-state aria-live="polite">
-        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-neon">Próxima parada</p>
-        <h2 class="mt-4 text-2xl font-bold leading-tight sm:text-3xl">Aún no hay publicaciones en esta categoría.</h2>
-        <p class="mx-auto mt-4 max-w-md text-sm leading-relaxed text-retro-crema/70">Estamos preparando nuevas historias para la ruta. Explora todas las publicaciones mientras tanto.</p>
-        <a class="mt-7 inline-flex min-h-11 items-center justify-center rounded-full bg-bunuelo px-5 text-sm font-bold text-retro-dark transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-bunuelo-dark" href="/blog" data-clear-category>Ver todas las publicaciones</a>
+      <div class="hidden rounded-2xl bg-asfalto/20 px-6 py-12 text-center sm:px-10" data-blog-empty-state aria-live="polite">
+        <h2 class="text-balance text-2xl font-bold leading-tight sm:text-3xl">Aún no hay publicaciones en esta categoría.</h2>
+        <p class="mx-auto mt-4 max-w-[55ch] text-base leading-relaxed text-retro-crema/80">Puedes explorar todas las historias mientras llega la próxima.</p>
+        <button class="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-bunuelo px-5 text-sm font-bold text-retro-dark transition-colors duration-200 hover:bg-bunuelo-dark active:scale-[0.98]" type="button" data-clear-category>Ver todas las publicaciones</button>
       </div>
     </section>
 
     <RoyalEnfieldSection />
 
-    <section class="bg-asfalto/10 px-5 py-24 md:px-10 md:py-32 lg:px-[72px]" data-reveal>
-      <div class="mx-auto flex max-w-[1176px] flex-col gap-8 md:flex-row md:items-end md:justify-between"><div><p class="mb-5 text-[11px] font-bold uppercase tracking-[0.2em] text-neon">Del blog al canal</p><h2 class="max-w-2xl text-4xl font-bold leading-tight tracking-tight md:text-6xl">La mejor historia todavía está en la carretera.</h2></div><a class="inline-flex min-h-12 w-fit items-center justify-center gap-3 rounded-full bg-bunuelo px-6 text-[13px] font-bold text-retro-dark transition hover:bg-bunuelo-dark hover:-translate-y-0.5" href={youtubeUrl} target="_blank" rel="noreferrer">Ver vídeos en YouTube <span aria-hidden="true">↗</span></a></div>
+    <section class="bg-asfalto/10 px-5 py-20 md:px-10 md:py-28 lg:px-[72px]" data-reveal>
+      <div class="mx-auto flex max-w-[1176px] flex-col gap-8 md:flex-row md:items-end md:justify-between"><div><h2 class="max-w-[18ch] text-balance text-[clamp(2rem,4vw,3.25rem)] font-bold leading-tight tracking-[-0.03em]">La ruta continúa en YouTube.</h2></div><a class="inline-flex min-h-12 w-fit items-center justify-center rounded-full bg-bunuelo px-6 text-sm font-bold text-retro-dark transition-colors duration-200 hover:bg-bunuelo-dark active:scale-[0.98]" href={youtubeUrl} target="_blank" rel="noreferrer">Ver vídeos en YouTube</a></div>
     </section>
   </main>
 
@@ -95,16 +94,14 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-CO', dateFormat);
 </Layout>
 
 <script>
-  const filters = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-category-filter]'));
+  const filters = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-category-filter]'));
   const postCards = Array.from(document.querySelectorAll<HTMLElement>('[data-blog-post]'));
   const postList = document.querySelector<HTMLElement>('[data-blog-post-list]');
   const emptyState = document.querySelector<HTMLElement>('[data-blog-empty-state]');
   const resultCount = document.querySelector<HTMLElement>('[data-blog-result-count]');
-  const activeClasses = ['bg-neon', 'text-retro-dark'];
-  const inactiveClasses = ['border', 'border-asfalto/20', 'hover:border-neon', 'hover:text-neon'];
 
   const applyCategory = (category: string | null) => {
-    const visiblePosts = postCards.filter((post) => !category || post.dataset.category === category);
+  const visiblePosts = postCards.filter((post) => !category || post.dataset.categories?.split('|').includes(category));
 
     postCards.forEach((post) => post.classList.toggle('hidden', !visiblePosts.includes(post)));
     postList?.classList.toggle('hidden', visiblePosts.filter((post) => post.parentElement === postList).length === 0);
@@ -114,29 +111,31 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-CO', dateFormat);
       const isActive = filter.dataset.categoryFilter === (category ?? 'Todos');
       filter.classList.toggle('bg-neon', isActive);
       filter.classList.toggle('text-retro-dark', isActive);
-      inactiveClasses.forEach((className) => filter.classList.toggle(className, !isActive));
+      filter.classList.toggle('bg-asfalto/20', !isActive);
+      filter.classList.toggle('text-retro-crema/85', !isActive);
+      filter.classList.toggle('hover:bg-asfalto/50', !isActive);
+      filter.classList.toggle('hover:text-neon', !isActive);
+      filter.setAttribute('aria-pressed', String(isActive));
     });
 
     if (resultCount) {
-      resultCount.textContent = category && visiblePosts.length > 0 ? `${visiblePosts.length} publicación${visiblePosts.length === 1 ? '' : 'es'} en ${category}.` : '';
+      resultCount.textContent = category && visiblePosts.length > 0 ? `${visiblePosts.length} ${visiblePosts.length === 1 ? 'publicación' : 'publicaciones'} en ${category}.` : '';
       resultCount.classList.toggle('hidden', !category || visiblePosts.length === 0);
     }
   };
 
-  const updateFromUrl = () => {
-    const category = new URLSearchParams(window.location.search).get('category');
-    applyCategory(filters.some((filter) => filter.dataset.categoryFilter === category) ? category : null);
-  };
-
   filters.forEach((filter) => {
-    filter.addEventListener('click', (event) => {
-      event.preventDefault();
-      window.history.pushState({}, '', filter.href);
-      updateFromUrl();
+    filter.addEventListener('click', () => {
+      const selectedCategory = filter.dataset.categoryFilter;
+      applyCategory(selectedCategory && selectedCategory !== 'Todos' ? selectedCategory : null);
       document.getElementById('articulos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
-  window.addEventListener('popstate', updateFromUrl);
-  updateFromUrl();
+  document.querySelector<HTMLButtonElement>('[data-clear-category]')?.addEventListener('click', () => {
+    applyCategory(null);
+    document.getElementById('articulos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  applyCategory(null);
 </script>

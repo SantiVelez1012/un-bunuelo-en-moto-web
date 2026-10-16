@@ -35,14 +35,34 @@
 
   h1,
   h2,
-  h3,
-  strong {
+  h3 {
     font-family: var(--font-display);
     font-weight: 600;
   }
 
+  strong {
+    font-family: var(--font-sans);
+    font-weight: 700;
+  }
+
+  ::selection {
+    background: var(--color-neon);
+    color: var(--color-retro-dark);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
   a {
     color: inherit;
+    text-underline-offset: 0.2em;
   }
 
   :focus-visible {
